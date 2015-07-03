@@ -10,7 +10,10 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
-  specs2 % Test
+  specs2 % Test,
+  "com.typesafe.play" % "play-slick_2.11" % "1.0.0",
+  "com.typesafe.play" %% "play-slick-evolutions" % "1.0.0",
+  "com.h2database" % "h2" % "1.4.187"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
