@@ -19,7 +19,9 @@ angular.module('modtools', [
   .config(['$mdThemingProvider', '$mdIconProvider', function($mdThemingProvider, $mdIconProvider) {
 
     $mdThemingProvider.theme('default')
-      .primaryPalette('red')
+      .primaryPalette('indigo', {
+        'default': '700'
+      })
       .accentPalette('orange');
 
     $mdIconProvider
