@@ -1,7 +1,48 @@
-@(message: String)
+<!DOCTYPE html>
+<html lang="en" ng-app="modtools">
+    <head>
+        <title>Moderation</title>
 
-@main("Welcome to Play") {
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 
-    @play20.welcome(message)
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="@routes.Assets.versioned("vendor/angular-material-0.10.0/angular-material.min.css")"/>
+        <link rel="stylesheet" href="@routes.Assets.versioned("css/app.css")"/>
+    </head>
 
-}
+    <body layout="column">
+
+        <div ng-view></div>
+
+        <script src="@routes.Assets.versioned("vendor/jquery-2.1.4/jquery.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-aria.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-animate.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-cookies.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-loader.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-message-format.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-messages.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-resource.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-route.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-sanitize.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("vendor/angular-material-0.10.0/angular-material.min.js")"></script>
+
+        <script src="https://cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>
+
+        <script src="@routes.Assets.versioned("config.js")"></script>  <!-- configuration options -->
+
+        <script src="@routes.Assets.versioned("js/app.js")"></script>
+        <script src="@routes.Assets.versioned("js/services.js")"></script>
+        <script src="@routes.Assets.versioned("js/controllers.js")"></script>
+        <script src="@routes.Assets.versioned("js/filters.js")"></script>
+        <script src="@routes.Assets.versioned("js/directives.js")"></script>
+
+    </body>
+</html>
