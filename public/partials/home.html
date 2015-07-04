@@ -1,7 +1,7 @@
 <md-toolbar>
     <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Settings">
-            <md-icon md-svg-icon="menu"></md-icon>
+            <md-icon md-svg-icon="menu" ng-click="menu()"></md-icon>
         </md-button>
         <h2>
             <span>Moderation Tools</span>
@@ -12,3 +12,47 @@
         </md-button>
     </div>
 </md-toolbar>
+
+<md-sidenav class="md-sidenav-left" md-component-id="left">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings">
+                <md-icon md-svg-icon="menu" ng-click="menu()"></md-icon>
+            </md-button>
+            <h2>
+                <span>Moderation Tools</span>
+            </h2>
+        </div>
+    </md-toolbar>
+
+    <md-content layout-padding>
+        <md-list>
+        <md-subheader>Queues</md-subheader>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="filter_list"></md-icon><p>Central</p>
+        </md-list-item>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="filter_list"></md-icon><p>Central (watched)</p>
+        </md-list-item>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="filter_list"></md-icon><p>Comment is Free</p>
+        </md-list-item>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="filter_list"></md-icon><p>CiF (watched)</p>
+        </md-list-item>
+            <md-list-item ng-click="goto('',$event)">
+                <md-icon md-svg-icon="face"></md-icon><p>Avatars</p>
+            </md-list-item>
+        <md-divider></md-divider>
+        <md-subheader>Other</md-subheader>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="comment"></md-icon><p>Discussions</p>
+        </md-list-item>
+        <md-list-item ng-click="goto('',$event)">
+            <md-icon md-svg-icon="people"></md-icon><p>Users</p>
+        </md-list-item>
+
+        </md-list>
+    </md-content>
+
+</md-sidenav>
