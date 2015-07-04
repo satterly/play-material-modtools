@@ -7,9 +7,37 @@
             <span>Moderation Tools</span>
         </h2>
         <span flex=""></span>
-        <md-button class="md-icon-button" aria-label="More">
-            <md-icon md-svg-icon="more_vert"></md-icon>
-        </md-button>
+        <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+                <md-icon md-svg-icon="more_vert"></md-icon>
+            </md-button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="logout($event)">
+                        <md-icon md-svg-icon="thumbs_up_down" md-menu-align-target></md-icon>
+                        Your Actions
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="logout($event)">
+                        <md-icon md-svg-icon="mail" md-menu-align-target></md-icon>
+                        Feedback
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="logout($event)">
+                        <md-icon md-svg-icon="info" md-menu-align-target></md-icon>
+                        About
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="logout($event)">
+                        <md-icon md-svg-icon="exit_to_app" md-menu-align-target></md-icon>
+                        Logout
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
     </div>
 </md-toolbar>
 
@@ -54,5 +82,5 @@
 
         </md-list>
     </md-content>
-
 </md-sidenav>
+
