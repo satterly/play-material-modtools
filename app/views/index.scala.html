@@ -39,7 +39,7 @@
                         <md-menu-item>
                             <md-button ng-click="logout($event)">
                                 <md-icon md-svg-icon="mail" md-menu-align-target></md-icon>
-                                Feedback
+                                Help & feedback
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
@@ -50,8 +50,14 @@
                         </md-menu-item>
                         <md-menu-item>
                             <md-button ng-click="logout($event)">
+                                <md-icon md-svg-icon="settings" md-menu-align-target></md-icon>
+                                Settings
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="logout($event)">
                                 <md-icon md-svg-icon="exit_to_app" md-menu-align-target></md-icon>
-                                Logout
+                                Sign out
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
@@ -86,6 +92,10 @@
                     <md-list-item ng-click="goto('',$event)">
                         <md-icon md-svg-icon="filter_list"></md-icon><p>CiF (watched)</p>
                     </md-list-item>
+                    <md-list-item ng-click="goto('',$event)">
+                        <md-icon md-svg-icon="filter_list"></md-icon><p>All</p>
+                    </md-list-item>
+                    <md-divider></md-divider>
                     <md-list-item ng-click="goto('',$event)">
                         <md-icon md-svg-icon="face"></md-icon><p>Avatars</p>
                     </md-list-item>
