@@ -13,6 +13,7 @@ angular.module('modtools', [
 
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'partials/home.html', controller: 'HomeController'});
+    $routeProvider.when('/comment', {templateUrl: 'partials/comment.html', controller: 'CommentController'});
     $routeProvider.otherwise({redirectTo: '/'});
   }])
 
@@ -42,6 +43,12 @@ angular.module('modtools', [
       .icon('thumbs_up_down', 'img/icons/ic_thumbs_up_down_24px.svg')
       .icon('mail'          , 'img/icons/ic_mail_24px.svg')
       .icon('info'          , 'img/icons/ic_info_24px.svg')
+      .icon('settings'      , 'img/icons/ic_settings_24px.svg')
       .icon('exit_to_app'   , 'img/icons/ic_exit_to_app_24px.svg')
-      .icon('cloud_upload'  , 'img/icons/ic_cloud_upload_24px.svg');
+      .icon('cloud_upload'  , 'img/icons/ic_cloud_upload_24px.svg')
+
+      .icon('approve'       , 'img/icons/ic_check_circle_24px.svg')
+      .icon('pick'          , 'img/icons/ic_bookmark_24px.svg')
+      .icon('block'         , 'img/icons/ic_block_24px.svg')
+      .icon('remove'        , 'img/icons/ic_delete_24px.svg');
   }]);
