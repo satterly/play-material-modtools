@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('modtools.controllers', ['ngMaterial'])
+angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
 
   .controller('SidenavController', ['$scope', '$location', '$mdSidenav', function ($scope, $location, $mdSidenav) {
 
@@ -18,7 +18,7 @@ angular.module('modtools.controllers', ['ngMaterial'])
     };
     $scope.goto = function(queue, event) {
       console.log(queue);
-      console.log(event);
+      // console.log(event);
       $location.path('/queue/' + queue)
     };
   }])
@@ -28,7 +28,8 @@ angular.module('modtools.controllers', ['ngMaterial'])
 
   }])
 
-  .controller('QueueController', ['$scope', '$routeParams', '$mdBottomSheet', 'Moderation', function ($scope, $routeParams, $mdBottomSheet, Moderation) {
+  .controller('QueueController', ['$scope', '$routeParams', '$mdBottomSheet', 'Moderation', 'Comment', 'Content',
+    function ($scope, $routeParams, $mdBottomSheet, Moderation, Comment, Content) {
 
     $scope.queue = $routeParams.queue;
     $scope.comment = undefined;
@@ -37,16 +38,26 @@ angular.module('modtools.controllers', ['ngMaterial'])
 
     var next = function () {
       Moderation.next({queue: $scope.queue}, function (response) {
-        console.log(response);
-        $scope.discussion = response.data.discussion;
-        $scope.comment = response.data.comment;
-        $scope.profile = response.data.profile;
-        if ($scope.comment) {
-          showButtons();
-        }
+        $scope.request = response.data;
+        Comment.get({id: $scope.request.moderation.commentId}, function (response) {
+          $scope.comment = response.comment;
+          Content.lookup({path: $scope.comment.discussion.key.replace("/p/","")}, function (response) {
+            $scope.content = response.response.content;
+          })
+        });
       })
     };
     next();
+
+    $scope.$watch('comment', function(current, old){
+      if (current) {
+        showButtons();
+      }
+      console.log('---start----');
+      console.log(current);
+      console.log(old);
+      console.log('---end----');
+    });
 
     var showButtons = function () {
       $mdBottomSheet.show({

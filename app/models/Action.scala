@@ -46,7 +46,7 @@ trait ActionTable {
     def commentId = column[Long]("comment_id")
     def profileId = column[Long]("profile_id")
     def avatarId = column[Long]("avatar_id")
-    def avatarUuid = column[Long]("avatar_uuid")
+    def avatarUuid = column[String]("avatar_uuid")
     def abuseReport = column[Long]("abuse_report_id")
     def sanctionId = column[Long]("sanction_id")
     def note = column[String]("note")

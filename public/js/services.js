@@ -14,6 +14,7 @@ angular.module('modtools.services', ['config', 'ngResource'])
   .factory('Content', ['$resource', 'config', function ($resource, config) {
     return $resource(config.contentApiUrl, {'orderBy': 'newest', 'page-size': 100, 'api-key': config.contentApiKey}, {
       'query':    {method: 'GET', url: config.contentApiUrl + '/search'},
+      'lookup':   {method: 'GET', params: {'show-fields': 'all'}, url: config.contentApiUrl + '/p/:path'},
       'shortUrl': {method: 'GET', params: {'show-fields': 'shortUrl'}, url: config.contentApiUrl + '/:section/:year/:month/:day/:slug'
       }
     });
