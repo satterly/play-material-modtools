@@ -2,18 +2,15 @@ package controllers
 
 import java.sql.Timestamp
 
-import models.{ModerationRequestTable, CommentTable, DiscussionTable, ProfileTable, QueueTable}
+import models.{ModerationRequestTable, QueueTable}
 import play.api.Play
-import play.api.db.slick.{HasDatabaseConfig, DatabaseConfigProvider}
-import play.api.mvc._
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import play.api.libs.json._
+import play.api.mvc._
 import slick.driver.JdbcProfile
 
 
 class Application extends Controller
-  with ProfileTable
-  with CommentTable
-  with DiscussionTable
   with QueueTable
   with ModerationRequestTable
   with HasDatabaseConfig[JdbcProfile] {
@@ -26,14 +23,6 @@ class Application extends Controller
 
   def index = Action {
     Ok(views.html.index())
-  }
-
-  def comments = Action.async {
-    db.run(Comments.result).map(res => Ok(Json.obj("data" -> res.toList)))
-  }
-
-  def profiles = Action.async {
-    db.run(Profiles.result).map(res => Ok(Json.obj("data" -> res.toList)))
   }
 
   def queues = Action.async {
@@ -55,7 +44,7 @@ class Application extends Controller
     def nextInQueue(queueId: Long) = for {
       req <- ModerationRequests
         .filter(r => (r.expiryTime.?.isEmpty || r.expiryTime < now) && r.queueId === queueId)
-        .sortBy(r => (r.priority.desc, r.discussionId.equals(0L).asColumnOf[Boolean].desc, r.sourceCreatedAt.asc))
+        .sortBy(r => (r.priority.desc, r.discussionId.equals(0L).asColumnOf[Boolean].desc, r.lastModified.asc))
         .take(1)
     } yield req.commentId
 
@@ -68,14 +57,10 @@ class Application extends Controller
         .filter(_.commentId === next.head)
         .map(r => (r.expiryTime, r.requestId, r.moderatorId))
         .update(expire, uuid, moderatorId))
-      comment <- db.run(Comments.filter(_.id === next.head).result)
-      discussion <- db.run(Discussions.filter(_.id === comment.head.discussionId).result)
-      profile <- db.run(Profiles.filter(_.id === comment.head.postedBy).result)
+      request <- db.run(ModerationRequests.filter(_.requestId === uuid).result)
     } yield Ok(Json.obj(
       "data" -> Json.obj(
-        "comment" -> comment.head,
-        "discussion" -> discussion.head,
-        "profile" -> profile.head,
+        "moderation" -> request.head,
         "reports" -> ""
       )
     ))

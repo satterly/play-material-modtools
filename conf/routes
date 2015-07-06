@@ -4,8 +4,6 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /comments                   controllers.Application.comments
-GET     /profiles                   controllers.Application.profiles
 GET     /queues                     controllers.Application.queues
 GET     /queues/:queue/next         controllers.Application.next(queue: String)
 

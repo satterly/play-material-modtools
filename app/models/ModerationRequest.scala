@@ -1,7 +1,9 @@
 package models
 
 import java.sql.Timestamp
-
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
+import play.api.libs.json._
 import play.api.libs.json.Json
 import slick.driver.JdbcProfile
 
@@ -14,8 +16,18 @@ case class ModerationRequest(
   priority: Long,
   moderatorId: Long,
   requestId: String,
-  discussionId: Long,
-  sourceCreatedAt: Timestamp)
+  lastModified: Timestamp,
+  discussionId: Long)
+
+object ModerationRequest {
+
+  implicit val dateTimeWrites = new Writes[Timestamp] {
+    def writes(t: Timestamp): JsValue = JsString(ISODateTimeFormat.dateTime.print(
+      new DateTime(t))
+    )
+  }
+  implicit val moderationRequestWrites = Json.writes[ModerationRequest]
+}
 
 trait ModerationRequestTable {
 
@@ -32,12 +44,11 @@ trait ModerationRequestTable {
     def priority = column[Long]("priority")
     def moderatorId = column[Long]("moderator_id")
     def requestId = column[String]("request_hash")
+    def lastModified = column[Timestamp]("source_created_on")
     def discussionId = column[Long]("discussion_id")
-    def sourceCreatedAt = column[Timestamp]("source_created_on")
 
-    // FIXME: foreign keys
-
-    def * = (id.?, queueId, commentId, expiryTime, createdAt, priority, moderatorId, requestId, discussionId, sourceCreatedAt) <> ((ModerationRequest.apply _).tupled, ModerationRequest.unapply _)
+    def * = (id.?, queueId, commentId, expiryTime, createdAt, priority, moderatorId, requestId, lastModified, discussionId) <>((ModerationRequest.apply _).tupled, ModerationRequest.unapply _)
   }
+
   lazy val ModerationRequests = TableQuery[ModerationRequests]
 }
