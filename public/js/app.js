@@ -36,6 +36,7 @@ angular.module('modtools', [
       .icon('person'        , 'img/icons/ic_person_24px.svg')
       .icon('people'        , 'img/icons/ic_people_24px.svg')
       .icon('image'         , 'img/icons/ic_image_24px.svg')
+      .icon('security'      , 'img/icons/ic_security_24px.svg')
       .icon('thumb_up'      , 'img/icons/ic_thumb_up_24px.svg')
       .icon('thumb_down'    , 'img/icons/ic_thumb_down_24px.svg')
       .icon('more_horiz'    , 'img/icons/ic_more_horiz_24px.svg')
