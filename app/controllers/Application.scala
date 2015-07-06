@@ -48,13 +48,17 @@ class Application extends Controller
 
     val now = new Timestamp(new java.util.Date().getTime)
 
-    val nextInQueue = for {
-      report <- ModerationRequests.filter(_.expiryTime < now)
-    } yield report.commentId
+    def queueId(queue: String) = for {
+      queue <- Queues.filter(_.code === queue)
+    } yield queue.id
+
+    def nextInQueue(queueId: Long) = for {
+      req <- ModerationRequests.filter(r => (r.expiryTime.?.isEmpty || r.expiryTime < now) && r.queueId === queueId)
+    } yield req.commentId
 
     for {
-      queues <- db.run(Queues.result) // filter by queue name
-      next <- db.run(nextInQueue.result)
+      queueId <- db.run(queueId(queue).result)
+      next <- db.run(nextInQueue(queueId.head).result)
       expire = new Timestamp(new java.util.Date().getTime + 20000)
       uuid = java.util.UUID.randomUUID.toString
       reqId <- db.run(ModerationRequests
