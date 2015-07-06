@@ -4,7 +4,7 @@
 
 angular.module('modtools.controllers', ['ngMaterial'])
 
-  .controller('SidenavController', ['$scope', '$mdSidenav', function ($scope, $mdSidenav) {
+  .controller('SidenavController', ['$scope', '$location', '$mdSidenav', function ($scope, $location, $mdSidenav) {
 
     $scope.queues = [
       'Central',
@@ -16,6 +16,11 @@ angular.module('modtools.controllers', ['ngMaterial'])
     $scope.menu = function () {
       $mdSidenav('left').toggle();
     };
+    $scope.goto = function(queue, event) {
+      console.log(queue);
+      console.log(event);
+      $location.path('/queue/' + queue)
+    };
   }])
 
   .controller('HomeController', ['$scope', function ($scope) {
@@ -23,12 +28,20 @@ angular.module('modtools.controllers', ['ngMaterial'])
 
   }])
 
-  .controller('CommentController', ['$scope', '$mdBottomSheet', function ($scope, $mdBottomSheet) {
+  .controller('QueueController', ['$scope', '$routeParams', '$mdBottomSheet', 'Moderation', function ($scope, $routeParams, $mdBottomSheet, Moderation) {
 
-    $scope.queue = undefined;
+    $scope.queue = $routeParams.queue;
     $scope.comment = undefined;
 
     // get next comment and display it for moderation
+
+    var next = function () {
+      Moderation.next({queue: $scope.queue}, function (response) {
+        console.log(response);
+        $scope.comment = response.data;
+      })
+    };
+    next();
 
     $scope.buttons = function($event) {
       $mdBottomSheet.show({

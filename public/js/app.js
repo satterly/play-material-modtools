@@ -13,7 +13,7 @@ angular.module('modtools', [
 
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'partials/home.html', controller: 'HomeController'});
-    $routeProvider.when('/comment', {templateUrl: 'partials/comment.html', controller: 'CommentController'});
+    $routeProvider.when('/queue/:queue', {templateUrl: 'partials/comment.html', controller: 'QueueController'});
     $routeProvider.otherwise({redirectTo: '/'});
   }])
 

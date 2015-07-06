@@ -68,7 +68,7 @@ class Application extends Controller
         .map(r => (r.expiryTime, r.requestId, r.moderatorId))
         .update(expire, uuid, moderatorId))
       comment <- db.run(Comments.filter(_.id === next.head).result)
-    } yield Ok(Json.obj("data" -> comment.toList))
+    } yield Ok(Json.obj("data" -> comment.head))
   }
 }
 
