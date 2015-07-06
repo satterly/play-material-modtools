@@ -23,7 +23,7 @@ object Profile {
       new DateTime(t))
     )
   }
-  implicit val commentWrites = Json.writes[Profile]
+  implicit val profileWrites = Json.writes[Profile]
 }
 
 trait ProfileTable {
@@ -41,7 +41,8 @@ trait ProfileTable {
     def totalCommentCount = column[Long]("total_comment_count")
     def isSocial = column[Boolean]("is_social")
 
-    def * = (id.?, username, userId, createdAt, lastModified, totalCommentCount.?, isSocial.?) <>((Profile.apply _).tupled, Profile.unapply _)
+    def * = (id.?, username, userId, createdAt, lastModified, totalCommentCount.?, isSocial.?) <> ((Profile.apply _).tupled, Profile.unapply _)
   }
-
+  val p = TableQuery[Profiles]
 }
+

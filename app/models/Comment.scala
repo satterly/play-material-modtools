@@ -17,7 +17,7 @@ case class Comment(
   lastModified: Timestamp,
   status: String,
   isFlagged: Boolean,
-  postedBy: Int) {
+  postedBy: Long) {
 
   def isBlocked: Boolean = status == "blocked"
   def isVisible: Boolean = status == "visible"
@@ -33,10 +33,12 @@ object Comment {
   implicit val commentWrites = Json.writes[Comment]
 }
 
-trait CommentTable {
+trait CommentTable { self: ProfileTable =>
 
   protected val driver: JdbcProfile
   import driver.api._
+
+  val p: TableQuery[Profiles]
 
   class Comments(tag: Tag) extends Table[Comment](tag, "comments_comment") {
 
@@ -46,9 +48,11 @@ trait CommentTable {
     def lastModified = column[Timestamp]("last_updated")
     def status = column[String]("status")
     def isFlagged = column[Boolean]("is_flagged")
-    def postedBy = column[Int]("posted_by_id")
+    def postedBy = column[Long]("posted_by_id")
+
+    def profile_fk = foreignKey("COMMENT_PROFILE_FK", postedBy, p)(_.id)
 
     def * = (id.?, body, createdAt, lastModified, status, isFlagged, postedBy) <>((Comment.apply _).tupled, Comment.unapply _)
   }
-
+  val c = TableQuery[Comments]
 }
