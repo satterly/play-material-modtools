@@ -16,8 +16,12 @@ case class Comment(
   createdAt: Timestamp,
   lastModified: Timestamp,
   status: String,
+  apiUrl: String,
+  isHighlighted: Boolean,
+  responseTo: Option[Map[String, String]] = None,
+  discussionId: Long,
   isFlagged: Boolean,
-  postedBy: Long) {
+  postedBy: Long) { // FIXME: add metadata
 
   def isBlocked: Boolean = status == "blocked"
   def isVisible: Boolean = status == "visible"
@@ -47,6 +51,7 @@ trait CommentTable { self: ProfileTable =>
     def createdAt = column[Timestamp]("created_on")
     def lastModified = column[Timestamp]("last_updated")
     def status = column[String]("status")
+    def discussionId = column[Long]("dicussion_id")
     def isFlagged = column[Boolean]("is_flagged")
     def postedBy = column[Long]("posted_by_id")
 

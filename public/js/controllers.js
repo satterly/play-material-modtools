@@ -38,7 +38,9 @@ angular.module('modtools.controllers', ['ngMaterial'])
     var next = function () {
       Moderation.next({queue: $scope.queue}, function (response) {
         console.log(response);
-        $scope.comment = response.data;
+        $scope.discussion = response.data.discussion;
+        $scope.comment = response.data.comment;
+        $scope.profile = response.data.profile;
         if ($scope.comment) {
           showButtons();
         }

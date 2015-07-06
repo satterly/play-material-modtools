@@ -2,7 +2,7 @@ package controllers
 
 import java.sql.Timestamp
 
-import models.{ModerationRequestTable, CommentTable, ProfileTable, QueueTable}
+import models.{ModerationRequestTable, CommentTable, DiscussionTable, ProfileTable, QueueTable}
 import play.api.Play
 import play.api.db.slick.{HasDatabaseConfig, DatabaseConfigProvider}
 import play.api.mvc._
@@ -13,6 +13,7 @@ import slick.driver.JdbcProfile
 class Application extends Controller
   with ProfileTable
   with CommentTable
+  with DiscussionTable
   with QueueTable
   with ModerationRequestTable
   with HasDatabaseConfig[JdbcProfile] {
@@ -68,7 +69,16 @@ class Application extends Controller
         .map(r => (r.expiryTime, r.requestId, r.moderatorId))
         .update(expire, uuid, moderatorId))
       comment <- db.run(Comments.filter(_.id === next.head).result)
-    } yield Ok(Json.obj("data" -> comment.head))
+      discussion <- db.run(Discussions.filter(_.id === comment.head.discussionId).result)
+      profile <- db.run(Profiles.filter(_.id === comment.head.postedBy).result)
+    } yield Ok(Json.obj(
+      "data" -> Json.obj(
+        "comment" -> comment.head,
+        "discussion" -> discussion.head,
+        "profile" -> profile.head,
+        "reports" -> ""
+      )
+    ))
   }
 }
 
