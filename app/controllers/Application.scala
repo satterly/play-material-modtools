@@ -24,11 +24,11 @@ class Application extends Controller
   }
 
   def comments = Action.async {
-    db.run(c.result).map(res => Ok(Json.obj("data" -> res.toList)))
+    db.run(Comments.result).map(res => Ok(Json.obj("data" -> res.toList)))
   }
 
   def profiles = Action.async {
-    db.run(p.result).map(res => Ok(Json.obj("data" -> res.toList)))
+    db.run(Profiles.result).map(res => Ok(Json.obj("data" -> res.toList)))
   }
 }
 

@@ -43,6 +43,6 @@ trait ProfileTable {
 
     def * = (id.?, username, userId, createdAt, lastModified, totalCommentCount.?, isSocial.?) <> ((Profile.apply _).tupled, Profile.unapply _)
   }
-  val p = TableQuery[Profiles]
+  val Profiles = TableQuery[Profiles]
 }
 

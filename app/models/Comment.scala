@@ -38,7 +38,7 @@ trait CommentTable { self: ProfileTable =>
   protected val driver: JdbcProfile
   import driver.api._
 
-  val p: TableQuery[Profiles]
+  val Profiles: TableQuery[Profiles]
 
   class Comments(tag: Tag) extends Table[Comment](tag, "comments_comment") {
 
@@ -50,9 +50,9 @@ trait CommentTable { self: ProfileTable =>
     def isFlagged = column[Boolean]("is_flagged")
     def postedBy = column[Long]("posted_by_id")
 
-    def profile_fk = foreignKey("COMMENT_PROFILE_FK", postedBy, p)(_.id)
+    def profile_fk = foreignKey("COMMENT_PROFILE_FK", postedBy, Profiles)(_.id)
 
     def * = (id.?, body, createdAt, lastModified, status, isFlagged, postedBy) <>((Comment.apply _).tupled, Comment.unapply _)
   }
-  val c = TableQuery[Comments]
+  val Comments = TableQuery[Comments]
 }
