@@ -13,9 +13,15 @@ import play.api.libs.json._
 case class Comment(
   id: Option[Long],
   body: String,
-  created_on: Timestamp,
-  last_updated: Timestamp,
-  status: String)
+  createdAt: Timestamp,
+  lastModified: Timestamp,
+  status: String,
+  isFlagged: Boolean,
+  postedBy: Int) {
+
+  def isBlocked: Boolean = status == "blocked"
+  def isVisible: Boolean = status == "visible"
+}
 
 object Comment {
 
@@ -36,11 +42,13 @@ trait CommentTable {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def body = column[String]("body", O.SqlType("TEXT"))
-    def created_on = column[Timestamp]("created_on")
-    def last_updated = column[Timestamp]("last_updated")
+    def createdAt = column[Timestamp]("created_on")
+    def lastModified = column[Timestamp]("last_updated")
     def status = column[String]("status")
+    def isFlagged = column[Boolean]("is_flagged")
+    def postedBy = column[Int]("posted_by_id")
 
-    def * = (id.?, body, created_on, last_updated, status) <>((Comment.apply _).tupled, Comment.unapply _)
+    def * = (id.?, body, createdAt, lastModified, status, isFlagged, postedBy) <>((Comment.apply _).tupled, Comment.unapply _)
   }
 
 }
