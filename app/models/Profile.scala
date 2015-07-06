@@ -12,10 +12,9 @@ case class Profile(
   username: String,
   userId: String,
   createdAt: Timestamp,
-  lastModified: Timestamp //,
-  // totalCommentCount: Long = 0,
- // isSocial: Option[Boolean] = None
-                    )
+  lastModified: Timestamp,
+  totalCommentCount: Option[Long],
+  isSocial: Option[Boolean])
 
 object Profile {
 
@@ -39,10 +38,10 @@ trait ProfileTable {
     def userId = column[String]("user_id", O.SqlType("TEXT"))
     def createdAt = column[Timestamp]("created_on")
     def lastModified = column[Timestamp]("last_updated_on")
- //   def totalCommentCount = column[Long]("total_comment_count")
- //   def isSocial = column[Boolean]("is_social")
+    def totalCommentCount = column[Long]("total_comment_count")
+    def isSocial = column[Boolean]("is_social")
 
-    def * = (id.?, username, userId, createdAt, lastModified) <>((Profile.apply _).tupled, Profile.unapply _)
+    def * = (id.?, username, userId, createdAt, lastModified, totalCommentCount.?, isSocial.?) <>((Profile.apply _).tupled, Profile.unapply _)
   }
 
 }
