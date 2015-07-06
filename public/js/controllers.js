@@ -39,11 +39,14 @@ angular.module('modtools.controllers', ['ngMaterial'])
       Moderation.next({queue: $scope.queue}, function (response) {
         console.log(response);
         $scope.comment = response.data;
+        if ($scope.comment) {
+          showButtons();
+        }
       })
     };
     next();
 
-    $scope.buttons = function($event) {
+    var showButtons = function () {
       $mdBottomSheet.show({
         templateUrl: 'partials/comment-buttons.html',
         controller: 'CommentButtonController'

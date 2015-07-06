@@ -1,8 +1,23 @@
-<p style="padding-left: 20px;">
-    {{ comment }}
-</p>
+{{ comment }}
+<div layout="row" layout-margin layout-fill layout-padding>
+    <div flex="70">article summary</div>
+    <div flex>is watched?</div>
+</div>
+<div layout="row" layout-margin layout-fill layout-padding>
+    <div flex="70">user profile</div>
+    <div flex>sanction count, ip address</div>
+</div>
+<div layout="row" layout-margin layout-fill layout-padding>
+    <div flex="70">
+        <div layout="column">
+            <div flex>abuse type</div>
+            <div flex>{{ comment.createdAt }}</div>
+            <div flex>{{ comment.body }}</div>
+            <div flex>0 replies</div>
+        </div>
+    </div>
+    <div flex>report info</div>
+</div>
+
 <div class="bottom-sheet-demo inset" layout="column" layout-sm="row" layout-align="center">
-    <md-button class="md-primary" ng-click="buttons($event)">
-        Show buttons
-    </md-button>
 </div>
