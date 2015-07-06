@@ -6,6 +6,8 @@
 GET     /                           controllers.Application.index
 GET     /comments                   controllers.Application.comments
 GET     /profiles                   controllers.Application.profiles
+GET     /queues                     controllers.Application.queues
+GET     /comments/:queue/next       controllers.Application.next(queue: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file               controllers.Assets.versioned(path="/public", file: Asset)
