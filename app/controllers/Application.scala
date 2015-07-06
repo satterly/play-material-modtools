@@ -44,7 +44,6 @@ class Application extends Controller
   def next(queue: String) = Action.async {
     // FIXME - get moderator Id from request
     val moderatorId = 1L
-    // FIXME - get queueId from queue name
 
     val now = new Timestamp(new java.util.Date().getTime)
 
@@ -53,7 +52,10 @@ class Application extends Controller
     } yield queue.id
 
     def nextInQueue(queueId: Long) = for {
-      req <- ModerationRequests.filter(r => (r.expiryTime.?.isEmpty || r.expiryTime < now) && r.queueId === queueId)
+      req <- ModerationRequests
+        .filter(r => (r.expiryTime.?.isEmpty || r.expiryTime < now) && r.queueId === queueId)
+        .sortBy(r => (r.priority.desc, r.discussionId.equals(0L).asColumnOf[Boolean].desc, r.sourceCreatedAt.asc))
+        .take(1)
     } yield req.commentId
 
     for {
