@@ -20,30 +20,9 @@ class Application @Inject()(ws: WSClient) extends Controller {
 
   def queues = Action {
 
-    val json = inTransaction {
-      val result = from(Queue.queues)(queues => select(queues))
-
-      result.map { queue =>
-
-          val now = new Timestamp(new java.util.Date().getTime)
-
-          val total = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id) compute (count))
-          val available = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id and (r.expiry_time.isNull or r.expiry_time.lt(now))) compute (count))
-          val oldest = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id).select(r.source_created_on).orderBy(r.created_on asc)).page(0, 1).headOption
-          val inflight = total - available
-
-          QueueResponse(
-            queue.code,
-            total.toLong,
-            oldest,
-            inflight
-          )
-      }
-    }
-
     Ok(Json.obj(
         "data" -> Json.obj(
-          "queues" -> json
+          "queues" -> Queue.status
         )
       )
     )
