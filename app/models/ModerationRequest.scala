@@ -4,6 +4,7 @@ import java.sql.Timestamp
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import org.squeryl.PrimitiveTypeMode._
+import org.squeryl.annotations.Column
 import play.api.libs.json._
 import play.api.libs.json.Json
 import org.squeryl.{Schema, KeyedEntity}
@@ -27,11 +28,11 @@ object ModerationQueue extends Schema {
       from(ModerationQueue.moderationQueues)(queues => select(queues)).map { queue =>
 
         val total = from(ModerationRequest.moderationRequests)(r =>
-          where(r.queue_id === queue.id) compute count)
+          where(r.queueId === queue.id) compute count)
         val available = from(ModerationRequest.moderationRequests)(r =>
-          where(r.queue_id === queue.id and (r.expiry_time.isNull or r.expiry_time.lt(now))) compute count)
+          where(r.queueId === queue.id and (r.expiryTime.isNull or r.expiryTime.lt(now))) compute count)
         val oldest = from(ModerationRequest.moderationRequests)(r =>
-          where(r.queue_id === queue.id).select(r.source_created_on).orderBy(r.created_on asc)).page(0, 1).headOption
+          where(r.queueId === queue.id).select(r.lastModified).orderBy(r.createdAt asc)).page(0, 1).headOption
         val inflight = total - available
 
         StatusResponse(queue.code, total.toLong, oldest, inflight)
@@ -58,25 +59,23 @@ object StatusResponse {
 
 case class ModerationRequest(
   id: Long,
-  queue_id: Long,
-  comment_id: Long,
-  expiry_time: Timestamp,
-  created_on: Timestamp,
+  @Column("queue_id")
+  queueId: Long,
+  @Column("comment_id")
+  commentId: Long,
+  @Column("expiry_time")
+  expiryTime: Timestamp,
+  @Column("created_on")
+  createdAt: Timestamp,
   priority: Long,
-  moderator_id: Long,
-  request_hash: String,
-  source_created_on: Timestamp,
-  discussion_id: Long) extends KeyedEntity[Long] {
-
-//  val queueId = queue_id
-//  val commentId = comment_id
-//  val expiryTime = expiry_time
-//  val createdAt = created_on
-//  val moderatorId = moderator_id
-//  val requestId = request_hash
-//  val lastModified = source_created_on
-//  val discussionId = discussion_id
-}
+  @Column("moderator_id")
+  moderatorId: Long,
+  @Column("request_hash")
+  requestId: String,
+  @Column("source_created_on")
+  lastModified: Timestamp,
+  @Column("discussion_id")
+  discussionId: Long) extends KeyedEntity[Long]
 
 object ModerationRequest extends Schema {
 
@@ -100,17 +99,17 @@ object ModerationRequest extends Schema {
 
       val n = from(ModerationRequest.moderationRequests)(r =>
           where(
-            r.expiry_time.isNull or r.expiry_time.lt(now) and
-              r.queue_id === q
-          ) select(r.comment_id)
-            orderBy(r.priority desc, r.discussion_id.equals(0) desc, r.source_created_on asc)
+            r.expiryTime.isNull or r.expiryTime.lt(now) and
+              r.queueId === q
+          ) select(r.commentId)
+            orderBy(r.priority desc, r.discussionId.equals(0) desc, r.lastModified asc)
         ).page(0,1).headOption
       val uuid = java.util.UUID.randomUUID.toString
       val u = update(ModerationRequest.moderationRequests)(r =>
-          where(r.comment_id === n)
-            set(r.expiry_time := expire, r.request_hash := uuid, r.moderator_id := 1L))
+          where(r.commentId === n)
+            set(r.expiryTime := expire, r.requestId := uuid, r.moderatorId := 1L))
       val mr = from(ModerationRequest.moderationRequests)(mr =>
-          where(mr.request_hash === uuid) select(mr))
+          where(mr.requestId === uuid) select(mr))
 
       mr.head
     }
