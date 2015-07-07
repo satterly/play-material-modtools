@@ -80,17 +80,8 @@
             <md-content layout-padding>
                 <md-list>
                     <md-subheader>Queues</md-subheader>
-                    <md-list-item ng-click="goto('central',$event)">
-                        <md-icon md-svg-icon="queue"></md-icon><p>Central</p>
-                    </md-list-item>
-                    <md-list-item ng-click="goto('central_watched',$event)">
-                        <md-icon md-svg-icon="queue"></md-icon><p>Central (watched)</p>
-                    </md-list-item>
-                    <md-list-item ng-click="goto('cif',$event)">
-                        <md-icon md-svg-icon="queue"></md-icon><p>Comment is Free</p>
-                    </md-list-item>
-                    <md-list-item ng-click="goto('cif_watched',$event)">
-                        <md-icon md-svg-icon="queue"></md-icon><p>CiF (watched)</p>
+                    <md-list-item ng-repeat="queue in queues" ng-click="goto(queue.code,$event)">
+                        <md-icon md-svg-icon="queue"></md-icon><p>{{ queue.name }} <span class="label label-default" ng-show="queue.available">{{ queue.available }} new<span></span></p>
                     </md-list-item>
                     <md-list-item ng-click="goto('all',$event)">
                         <md-icon md-svg-icon="queue"></md-icon><p>All</p>

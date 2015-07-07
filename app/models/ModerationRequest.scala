@@ -35,14 +35,15 @@ object ModerationQueue extends Schema {
           where(r.queueId === queue.id).select(r.lastModified).orderBy(r.createdAt asc)).page(0, 1).headOption
         val inflight = total - available
 
-        StatusResponse(queue.code, total.toLong, oldest, inflight)
+        StatusResponse(queue.name, queue.code, total.toLong, oldest, inflight)
       }
     }.toList
   }
 }
 
 case class StatusResponse(
-  queue: String,
+  name: String,
+  code: String,
   available: Long,
   oldest: Option[Timestamp],
   inflight: Long)
@@ -107,7 +108,7 @@ object ModerationRequest extends Schema {
       val uuid = java.util.UUID.randomUUID.toString
       val u = update(ModerationRequest.moderationRequests)(r =>
           where(r.commentId === n)
-            set(r.expiryTime := expire, r.requestId := uuid, r.moderatorId := 1L))
+            set(r.expiryTime := expire, r.requestId := uuid, r.moderatorId := moderatorId))
       val mr = from(ModerationRequest.moderationRequests)(mr =>
           where(mr.requestId === uuid) select(mr))
 

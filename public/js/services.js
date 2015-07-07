@@ -8,6 +8,7 @@ angular.module('modtools.services', ['config', 'ngResource'])
     return $resource(config.moderationApiUrl + '/comment', {}, {
       'next':    {method: 'GET', url: config.moderationApiUrl + '/queues/:queue/next'},
       'comment': {method: 'POST', url: config.moderationApiUrl + '/comment/:commentId/status'},
+      'status': {method: 'GET', url: config.moderationApiUrl + '/queues'}
     })
   }])
 

@@ -4,14 +4,19 @@
 
 angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
 
-  .controller('SidenavController', ['$scope', '$location', '$mdSidenav', function ($scope, $location, $mdSidenav) {
+  .controller('SidenavController', ['$scope', '$location', '$mdSidenav', 'Moderation',
+    function ($scope, $location, $mdSidenav, Moderation) {
 
-    $scope.queues = [
-      'Central',
-      'Central (watched)',
-      'Comment is Free',
-      'CiF (watched)'
-    ];
+      console.log('SideNav...');
+
+    var refresh = function() {
+      console.log('get status...');
+      Moderation.status({}, function (response) {
+        $scope.queues = response.data.queues;
+        console.log(response);
+      });
+    };
+    refresh();
 
     $scope.menu = function () {
       $mdSidenav('left').toggle();
@@ -24,7 +29,6 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
   }])
 
   .controller('HomeController', ['$scope', function ($scope) {
-
 
   }])
 
@@ -53,10 +57,10 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
       if (!angular.isDefined(current)) {
         $scope.showButtons();
       }
-      console.log('---start----');
-      console.log(current);
-      console.log(old);
-      console.log('---end----');
+      //console.log('---start----');
+      //console.log(current);
+      //console.log(old);
+      //console.log('---end----');
     });
 
     $scope.showButtons = function ($event) {
@@ -67,9 +71,9 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
         templateUrl: 'partials/comment-buttons.html',
         controller: function ($scope, $mdBottomSheet) {
           $scope.approve = function () {
-            console.log($scope.comment.id);
+            // console.log($scope.comment.id);
             Moderation.comment({commentId: $scope.comment.id}, {status: 'approve'}, function (response) {
-              console.log(response);
+              // console.log(response);
               // Moderation.action({...})
             });
           };
