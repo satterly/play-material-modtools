@@ -9,9 +9,9 @@ import play.api.libs.json.{JsString, JsValue, Writes, Json}
 import org.squeryl.{Schema, KeyedEntity}
 
 case class Queue(
-  id: Long,
-  name: String,
-  code: String) extends KeyedEntity[Long]
+                  id: Long,
+                  name: String,
+                  code: String) extends KeyedEntity[Long]
 
 object Queue extends Schema {
 
@@ -21,23 +21,20 @@ object Queue extends Schema {
 
   def status: List[QueueResponse] = {
     inTransaction {
-      val result = from(Queue.queues)(queues => select(queues))
 
-      result.map { queue =>
+      val now = new Timestamp(new java.util.Date().getTime)
 
-        val now = new Timestamp(new java.util.Date().getTime)
+      from(Queue.queues)(queues => select(queues)).map { queue =>
 
-        val total = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id) compute (count))
-        val available = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id and (r.expiry_time.isNull or r.expiry_time.lt(now))) compute (count))
-        val oldest = from(ModerationRequest.moderationRequests)(r => where(r.queue_id === queue.id).select(r.source_created_on).orderBy(r.created_on asc)).page(0, 1).headOption
+        val total = from(ModerationRequest.moderationRequests)(r =>
+          where(r.queue_id === queue.id) compute count)
+        val available = from(ModerationRequest.moderationRequests)(r =>
+          where(r.queue_id === queue.id and (r.expiry_time.isNull or r.expiry_time.lt(now))) compute count)
+        val oldest = from(ModerationRequest.moderationRequests)(r =>
+          where(r.queue_id === queue.id).select(r.source_created_on).orderBy(r.created_on asc)).page(0, 1).headOption
         val inflight = total - available
 
-        QueueResponse(
-          queue.code,
-          total.toLong,
-          oldest,
-          inflight
-        )
+        QueueResponse(queue.code, total.toLong, oldest, inflight)
       }
     }.toList
   }
@@ -45,7 +42,7 @@ object Queue extends Schema {
 
 }
 
-case class QueueResponse (
+case class QueueResponse(
   queue: String,
   available: Long,
   oldest: Option[Timestamp],
