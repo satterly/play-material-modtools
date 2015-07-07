@@ -5,21 +5,31 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.json.Json
-import slick.driver.JdbcProfile
+import org.squeryl.{Schema, KeyedEntity}
 
 case class ModerationRequest(
-  id: Option[Long],
-  queueId: Long,
-  commentId: Long,
-  expiryTime: Timestamp,
-  createdAt: Timestamp,
+  id: Long,
+  queue_id: Long,
+  comment_id: Long,
+  expiry_time: Timestamp,
+  created_on: Timestamp,
   priority: Long,
-  moderatorId: Long,
-  requestId: String,
-  lastModified: Timestamp,
-  discussionId: Long)
+  moderator_id: Long,
+  request_hash: String,
+  source_created_on: Timestamp,
+  discussion_id: Long) extends KeyedEntity[Long] {
 
-object ModerationRequest {
+  val queueId = queue_id
+  val commentId = comment_id
+  val expiryTime = expiry_time
+  val createdAt = created_on
+  val moderatorId = moderator_id
+  val requestId = request_hash
+  val lastModified = source_created_on
+  val discussionId = discussion_id
+}
+
+object ModerationRequest extends Schema {
 
   implicit val dateTimeWrites = new Writes[Timestamp] {
     def writes(t: Timestamp): JsValue = JsString(ISODateTimeFormat.dateTime.print(
@@ -27,28 +37,6 @@ object ModerationRequest {
     )
   }
   implicit val moderationRequestWrites = Json.writes[ModerationRequest]
-}
 
-trait ModerationRequestTable {
-
-  protected val driver: JdbcProfile
-  import driver.api._
-
-  class ModerationRequests(tag: Tag) extends Table[ModerationRequest](tag, "moderation_queues_moderationrequest") {
-
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def queueId = column[Long]("queue_id")
-    def commentId = column[Long]("comment_id")
-    def expiryTime = column[Timestamp]("expiry_time")
-    def createdAt = column[Timestamp]("created_on")
-    def priority = column[Long]("priority")
-    def moderatorId = column[Long]("moderator_id")
-    def requestId = column[String]("request_hash")
-    def lastModified = column[Timestamp]("source_created_on")
-    def discussionId = column[Long]("discussion_id")
-
-    def * = (id.?, queueId, commentId, expiryTime, createdAt, priority, moderatorId, requestId, lastModified, discussionId) <>((ModerationRequest.apply _).tupled, ModerationRequest.unapply _)
-  }
-
-  lazy val ModerationRequests = TableQuery[ModerationRequests]
+  val moderationRequests = table[ModerationRequest]("moderation_queues_moderationrequest")
 }

@@ -5,18 +5,25 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.json.Json
-import slick.driver.JdbcProfile
+import org.squeryl.{Schema, KeyedEntity}
 
 case class Sanction (
-  id: Option[Long],
-  profileId: Long,
-  sanctionType: String,
-  createdAt: Timestamp,
-  moderatorId: Long,
-  expiryTime: Timestamp,
-  note: String)
+  id: Long,
+  user_id: Long,
+  sanction_type: String,
+  created_on: Timestamp,
+  created_by_id: Long,
+  sanction_until: Timestamp,
+  note: String) extends KeyedEntity[Long] {
 
-object Sanction {
+  val profileId = user_id
+  val sanctionType = sanction_type
+  val createdAt = created_on
+  val moderatorId = created_by_id
+  val expiryTime = sanction_until
+}
+
+object Sanction extends Schema {
 
   implicit val dateTimeWrites = new Writes[Timestamp] {
     def writes(t: Timestamp): JsValue = JsString(ISODateTimeFormat.dateTime.print(
@@ -24,25 +31,6 @@ object Sanction {
     )
   }
   implicit val sanctionWrites = Json.writes[Sanction]
-}
 
-trait SanctionTable {
-
-  protected val driver: JdbcProfile
-  import driver.api._
-
-  class Sanctions(tag: Tag) extends Table[Sanction](tag, "moderation_sanction") {
-
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def profileId = column[Long]("user_id")
-    def sanctionType = column[String]("sanction_type")
-    def createdAt = column[Timestamp]("created_on")
-    def moderatorId = column[Long]("created_by_id")
-    def expiryTime = column[Timestamp]("sanction_until")
-    def note = column[String]("note")
-
-    def * = (id.?, profileId, sanctionType, createdAt, moderatorId, expiryTime, note) <>((Sanction.apply _).tupled, Sanction.unapply _)
-  }
-
-  lazy val Sanctions = TableQuery[Sanctions]
+  val sanctions = table[Sanction]("moderation_sanction")
 }

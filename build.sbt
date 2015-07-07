@@ -10,8 +10,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "com.typesafe.play" % "play-slick_2.11" % "1.0.0",
-//  "com.typesafe.play" %% "play-slick-evolutions" % "1.0.0",
+  jdbc,
+  "org.squeryl" % "squeryl_2.11" % "0.9.5-7",
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41"
 )
 

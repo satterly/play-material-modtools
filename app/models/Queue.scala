@@ -1,31 +1,36 @@
 package models
 
-import play.api.libs.json.Json
-import slick.driver.JdbcProfile
+import java.sql.Timestamp
+
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
+import play.api.libs.json.{JsString, JsValue, Writes, Json}
+import org.squeryl.{Schema, KeyedEntity}
 
 case class Queue(
-  id: Option[Long],
+  id: Long,
   name: String,
-  code: String)
+  code: String) extends KeyedEntity[Long]
 
-object Queue {
+object Queue extends Schema {
 
   implicit val queueWrites = Json.writes[Queue]
+
+  val queues = table[Queue]("moderation_queues_moderationqueue")
 }
 
-trait QueueTable {
+case class QueueResponse (
+  queue: String,
+  available: Long,
+  oldest: Option[Timestamp],
+  inflight: Long)
 
-  protected val driver: JdbcProfile
-  import driver.api._
+object QueueResponse {
 
-  class Queues(tag: Tag) extends Table[Queue](tag, "moderation_queues_moderationqueue") {
-
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def name = column[String]("name", O.SqlType("TEXT"))
-    def code = column[String]("code", O.SqlType("TEXT"))
-
-    def * = (id.?, name, code) <> ((Queue.apply _).tupled, Queue.unapply _)
+  implicit val dateTimeWrites = new Writes[Timestamp] {
+    def writes(t: Timestamp): JsValue = JsString(ISODateTimeFormat.dateTime.print(
+      new DateTime(t))
+    )
   }
-  lazy val Queues = TableQuery[Queues]
+  implicit val queueResponseWrites = Json.writes[QueueResponse]
 }
-

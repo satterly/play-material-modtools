@@ -5,24 +5,36 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import play.api.libs.json.Json
-import slick.driver.JdbcProfile
+import org.squeryl.{Schema, KeyedEntity}
 
 case class Action (
-  id: Option[Long],
-  moderatorId: Long,
-  actionType: String,
-  createdAt: Timestamp,
-  commentId: Long,
-  profileId: Long,
-  avatarId: Long,
-  avatarUuid: String,
-  abuseReport: Long,
-  sanctionId: Long,
+  id: Long,
+  moderation_id: Long,
+  `type`: String,
+  created_on: Timestamp,
+  comment_id: Long,
+  profile_id: Long,
+  avatar_id: Long,
+  avatar_uuid: String,
+  abuse_report: Long,
+  sanction_id: Long,
   note: String,
-  discussionId: Long
-  )
+  discussion_id: Long
+  ) extends KeyedEntity[Long] {
 
-object Action {
+  val moderatorId = moderation_id
+  val actionType = `type`
+  val createdAt = created_on
+  val commentId = comment_id
+  val profileId = profile_id
+  val avatarId = avatar_id
+  val avatarUuid = avatar_uuid
+  val abuseReport = abuse_report
+  val sanctionId = sanction_id
+  val discussionId = discussion_id
+}
+
+object Action extends Schema {
 
   implicit val dateTimeWrites = new Writes[Timestamp] {
     def writes(t: Timestamp): JsValue = JsString(ISODateTimeFormat.dateTime.print(
@@ -30,31 +42,6 @@ object Action {
     )
   }
   implicit val actionWrites = Json.writes[Action]
+
+  val actions = table[Action]("moderation_action")
 }
-
-trait ActionTable {
-
-  protected val driver: JdbcProfile
-  import driver.api._
-
-  class Actions(tag: Tag) extends Table[Action](tag, "moderation_action") {
-
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def moderatorId = column[Long]("moderator_id")
-    def actionType = column[String]("type")
-    def createdAt = column[Timestamp]("created_on")
-    def commentId = column[Long]("comment_id")
-    def profileId = column[Long]("profile_id")
-    def avatarId = column[Long]("avatar_id")
-    def avatarUuid = column[String]("avatar_uuid")
-    def abuseReport = column[Long]("abuse_report_id")
-    def sanctionId = column[Long]("sanction_id")
-    def note = column[String]("note")
-    def discussionId = column[Long]("discussion_id")
-
-    def * = (id.?, moderatorId, actionType, createdAt, commentId, profileId, avatarId, avatarUuid, abuseReport, sanctionId, note, discussionId) <>((Action.apply _).tupled, Action.unapply _)
-  }
-
-  lazy val Actions = TableQuery[Actions]
-}
-
