@@ -50,8 +50,8 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
     next();
 
     $scope.$watch('comment', function(current, old){
-      if (current) {
-        showButtons();
+      if (!angular.isDefined(current)) {
+        $scope.showButtons();
       }
       console.log('---start----');
       console.log(current);
@@ -59,16 +59,37 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
       console.log('---end----');
     });
 
-    var showButtons = function () {
+    $scope.showButtons = function ($event) {
       $mdBottomSheet.show({
+        scope: $scope,
+        preserveScope: true,
+        targetEvent: $event,
         templateUrl: 'partials/comment-buttons.html',
-        controller: 'CommentButtonController'
-      }).then(function (clickedItem) {
-        $scope.alert = clickedItem.name + ' clicked!';
+        controller: function ($scope, $mdBottomSheet) {
+          $scope.approve = function () {
+            console.log($scope.comment.id);
+            Moderation.comment({commentId: $scope.comment.id}, {status: 'approve'}, function (response) {
+              console.log(response);
+              // Moderation.action({...})
+            });
+          };
+          $scope.pick = function () {
+
+          };
+          $scope.block = function () {
+
+          };
+          $scope.remove = function () {
+
+          };
+
+
+          console.log($scope);
+          console.log($mdBottomSheet);
+        }
+      }).then(function (item) {
+        console.log('then');
+        console.log(item);
       });
     }
-  }])
-
-  .controller('CommentButtonController', ['$scope', '$mdBottomSheet', function ($scope, $mdBottomSheet) {
-
   }]);

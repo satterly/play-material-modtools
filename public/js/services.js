@@ -6,8 +6,8 @@ angular.module('modtools.services', ['config', 'ngResource'])
 
   .factory('Moderation', ['$resource', 'config', function ($resource, config) {
     return $resource(config.moderationApiUrl + '/comment', {}, {
-      'next':     {method: 'GET', url: config.moderationApiUrl + '/queues/:queue/next'},
-      'moderate': {method: 'POST', url: config.moderationApiUrl + '/comment/:commentId/status'}
+      'next':    {method: 'GET', url: config.moderationApiUrl + '/queues/:queue/next'},
+      'comment': {method: 'POST', url: config.moderationApiUrl + '/comment/:commentId/status'},
     })
   }])
 
@@ -31,7 +31,12 @@ angular.module('modtools.services', ['config', 'ngResource'])
       'highlighted': {method: 'GET', url: config.discussionApiUrl + '/discussion//p/:key/highlights'},
       'recommended': {method: 'GET', url: config.discussionApiUrl + '/discussion//p/:key/recommended'},
       'staff':       {method: 'GET', url: config.discussionApiUrl + '/discussion//p/:key/staff-comments'},
-      'top':         {method: 'GET', url: config.discussionApiUrl + '/discussion//p/:key/topcomments'}
+      'top':         {method: 'GET', url: config.discussionApiUrl + '/discussion//p/:key/topcomments'},
+      'watch':       {method: 'POST', url: config.discussionApiUrl + '/discussion//p/:key/watch'},
+      'unwatch':     {method: 'POST', url: config.discussionApiUrl + '/discussion//p/:key/unwatch'},
+      'premoderate': {method: 'POST', url: config.discussionApiUrl + '/discussion//p/:key/premod'},
+      'postmoderate':{method: 'POST', url: config.discussionApiUrl + '/discussion//p/:key/postmod'}
+
     });
   }])
 
@@ -41,7 +46,12 @@ angular.module('modtools.services', ['config', 'ngResource'])
       'highlighted': {method: 'GET', url: config.discussionApiUrl + '/recent/highlighted'},
       'recommended': {method: 'GET', url: config.discussionApiUrl + '/recent/recommended'},
       'get':         {method: 'GET', url: config.discussionApiUrl + '/comment/:id'},
-      'context':     {method: 'GET', url: config.discussionApiUrl + '/comment/:id/context'}
+      'context':     {method: 'GET', url: config.discussionApiUrl + '/comment/:id/context'},
+      'approve':     {method: 'POST', params: {status: 'visible'}, url: config.discussionApiUrl + '/comment/:id/status'},
+      'pick':        {method: 'POST', url: config.discussionApiUrl + '/comment/:id/pick'},
+      'reject':      {method: 'POST', params: {status: 'rejected'}, url: config.discussionApiUrl + '/comment/:id/status'},
+      'block':       {method: 'POST', params: {status: 'blocked'}, url: config.discussionApiUrl + '/comment/:id/status'},
+      'remove':      {method: 'POST', params: {status: 'removed'}, url: config.discussionApiUrl + '/comment/:id/status'}
     });
   }])
 
@@ -52,7 +62,10 @@ angular.module('modtools.services', ['config', 'ngResource'])
       'comments':    {method: 'GET', url: config.discussionApiUrl + '/profile/:userid/comments'},
       'picked':      {method: 'GET', url: config.discussionApiUrl + '/profile/:userid/comments?displayHighlighted'},
       'replies':     {method: 'GET', url: config.discussionApiUrl + '/profile/:userid/replies'},
-      'discussions': {method: 'GET', url: config.discussionApiUrl + '/profile/:userid/discussions'}
+      'discussions': {method: 'GET', url: config.discussionApiUrl + '/profile/:userid/discussions'},
+      'ban':         {method: 'POST', params: {sanction: 'banned'}, url: config.discussionApiUrl + '/profile/:userid/sanction'},
+      'premoderate': {method: 'POST', params: {sanction: 'premoderated'}, url: config.discussionApiUrl + '/profile/:userid/sanction'},
+      'watch':       {method: 'POST', params: {sanction: 'watched'}, url: config.discussionApiUrl + '/profile/:userid/sanction'},
     });
   }])
 

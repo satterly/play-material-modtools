@@ -1,16 +1,17 @@
 package controllers
 
 import java.sql.Timestamp
+import javax.inject.Inject
 
 import models.{ModerationRequestTable, QueueTable}
 import play.api.Play
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import play.api.libs.json._
+import play.api.libs.ws._
 import play.api.mvc._
 import slick.driver.JdbcProfile
 
-
-class Application extends Controller
+class Application @Inject() (ws: WSClient) extends Controller
   with QueueTable
   with ModerationRequestTable
   with HasDatabaseConfig[JdbcProfile] {
@@ -26,8 +27,24 @@ class Application extends Controller
   }
 
   def queues = Action.async {
+
+
+
+    val q0 = ModerationRequests.groupBy(_.queueId)
+    val q1 = q0.map(_._2.length)
+    db.run(q1.result).map
+
+
     for {
       queues <- db.run(Queues.result)
+//      totals <- db.run(ModerationRequests.groupBy(_.queueId).map {
+//        case (q, results) => (q -> results.length).result)
+//      })
+
+      // FIXME
+      // count per queue
+      // inflight
+      // oldest
     } yield Ok(Json.obj("data" -> queues.toList))
   }
 
@@ -65,5 +82,23 @@ class Application extends Controller
       )
     ))
   }
+
+
+//  def comment(commentId: Long, status: String) = Action.async {
+//    // FIXME - get moderator Id from request
+//    val moderatorId = 1L
+//
+//    val data = Json.obj(
+//      "status" -> status
+//    )
+//
+//    val url: String = "http://localhost:8080/" // Discussion API
+//    val request: WSRequest = ws.url(url)
+//
+//    for {
+//      comment <- request.post(data)
+//      // action <-
+//    } yield Ok()
+//  }
 }
 
