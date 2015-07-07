@@ -39,7 +39,7 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
     var next = function () {
       Moderation.next({queue: $scope.queue}, function (response) {
         $scope.request = response.data;
-        Comment.get({id: $scope.request.moderation.commentId}, function (response) {
+        Comment.get({id: $scope.request.next.commentId}, function (response) {
           $scope.comment = response.comment;
           Content.lookup({path: $scope.comment.discussion.key.replace("/p/","")}, function (response) {
             $scope.content = response.response.content;

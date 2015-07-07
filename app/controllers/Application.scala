@@ -3,7 +3,7 @@ package controllers
 import java.sql.Timestamp
 import javax.inject.Inject
 
-import models.{QueueResponse, ModerationRequest, Queue}
+import models.{ModerationQueue, ModerationRequest}
 import play.api.Play
 import play.api.libs.json._
 import play.api.libs.ws._
@@ -21,11 +21,10 @@ class Application @Inject()(ws: WSClient) extends Controller {
   def queues = Action {
 
     Ok(Json.obj(
-        "data" -> Json.obj(
-          "queues" -> Queue.status
-        )
+      "data" -> Json.obj(
+        "queues" -> ModerationQueue.status
       )
-    )
+    ))
   }
 
 //
@@ -65,77 +64,15 @@ class Application @Inject()(ws: WSClient) extends Controller {
 //  }
 
 
-  def next(queue: String) = Action { // FIXME: discussion id and moderator id
+  def next(queue: String) = Action {
 
-    val TIMEOUT = 20000 // 20 seconds?
+    val moderatorId = 1L // FIXME: get moderatorId from request
 
-    val json = inTransaction {
-      val now = new Timestamp(new java.util.Date().getTime)
-      val expire = new Timestamp(new java.util.Date().getTime + TIMEOUT)
-
-      val uuid = java.util.UUID.randomUUID.toString
-
-      val queue_id = from(Queue.queues)(q => where(q.code === queue) select (q.id)).single
-
-      val next_id = from(ModerationRequest.moderationRequests)(r =>
-        where(
-          r.expiry_time.isNull or r.expiry_time.lt(now) and
-            r.queue_id === queue_id
-        )
-          select(r.comment_id)
-          orderBy(r.priority desc, r.discussion_id.equals(0) desc, r.source_created_on asc)
-      ).page(0,1).headOption
-
-      update(ModerationRequest.moderationRequests)(r =>
-        where(r.comment_id === next_id)
-          set(r.expiry_time := expire, r.request_hash := uuid, r.moderator_id := 1L)
+    Ok(Json.obj(
+      "data" -> Json.obj(
+        "next" -> ModerationRequest.next(queue, moderatorId)
       )
-      println(next_id.map(_.toString))
-
-//      val comment = from(Database.comments)(c =>
-//        where(c.id === next_id)
-//          select(c)
-//      ).headOption
-
-//      println(comment.map(_.toString))
-
-      Json.obj(
-
-      )
-
-//      Json.obj(
-//        "body" -> comment.map { c => c.body },
-//        "posted_by" -> Json.obj(),
-//        "premod_user" -> false,
-//        "recommends" -> 0,
-//        "premod_thread" -> false,
-//        "previous_actions" -> Json.arr(),
-//        "discussion" -> Json.obj(),
-//        "abuse_reports" -> Json.arr(),
-//        "permalink" -> comment.map { c => s"http://www.theguardian.com/discussion/comment-permalink/${c.id}" },
-//        "abuse_report_summary" -> Json.arr(),
-//        "picked_by" -> comment.map { c => c.is_flagged },
-//        "potential_spam" -> false,
-//        "reply_to" -> "",
-//        "actioned" -> false,
-//        "replies" -> 0,
-//        "date" -> comment.map { c => iso8601Formatter.format(c.created_on) },
-//        "has_open_abuse_reports" -> false,
-//        "commentId" -> comment.map { c => c.id },
-//        "requestHash" -> uuid,
-//        "expires" -> iso8601Formatter.format(expire)
-//      )
-
-    }
-
-    Ok(
-      Json.obj(
-        "status" -> "ok",
-        "total" -> 1,
-        "comment" -> json
-      )
-    )
-
+    ))
   }
 
   //  def comment(commentId: Long, status: String) = Action.async {
