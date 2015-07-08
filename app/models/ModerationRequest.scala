@@ -102,17 +102,27 @@ object ModerationRequest extends Schema {
           where(
             r.expiryTime.isNull or r.expiryTime.lt(now) and
               r.queueId === q
-          ) select(r.commentId)
+          ) select(r.id)
             orderBy(r.priority desc, r.discussionId.equals(0) desc, r.lastModified asc)
         ).page(0,1).headOption
+
       val uuid = java.util.UUID.randomUUID.toString
+
       val u = update(ModerationRequest.moderationRequests)(r =>
-          where(r.commentId === n)
+          where(r.id === n)
             set(r.expiryTime := expire, r.requestId := uuid, r.moderatorId := moderatorId))
       val mr = from(ModerationRequest.moderationRequests)(mr =>
           where(mr.requestId === uuid) select(mr))
 
       mr.head
+    }
+  }
+
+  def delete(uuid: String) = {
+    inTransaction {
+
+      ModerationRequest.moderationRequests.deleteWhere(r => r.requestId === uuid)
+
     }
   }
 }

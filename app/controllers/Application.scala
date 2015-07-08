@@ -1,6 +1,5 @@
 package controllers
 
-import java.sql.Timestamp
 import javax.inject.Inject
 
 import models.{ModerationQueue, ModerationRequest}
@@ -8,7 +7,6 @@ import play.api.Play
 import play.api.libs.json._
 import play.api.libs.ws._
 import play.api.mvc._
-import org.squeryl.PrimitiveTypeMode._
 
 class Application @Inject()(ws: WSClient) extends Controller {
 
@@ -27,46 +25,9 @@ class Application @Inject()(ws: WSClient) extends Controller {
     ))
   }
 
-//
-//  def next(queue: String) = Action.async {
-//    // FIXME - get moderator Id from request
-//    val moderatorId = 1L
-//
-//    val now = new Timestamp(new java.util.Date().getTime)
-//
-//    def queueId(queue: String) = for {
-//      queue <- Queues.filter(_.code === queue)
-//    } yield queue.id
-//
-//    def nextInQueue(queueId: Long) = for {
-//      req <- ModerationRequests
-//        .filter(r => (r.expiryTime.?.isEmpty || r.expiryTime < now) && r.queueId === queueId)
-//        .sortBy(r => (r.priority.desc, r.discussionId.equals(0L).asColumnOf[Boolean].desc, r.lastModified.asc))
-//        .take(1)
-//    } yield req.commentId
-//
-//    for {
-//      queueId <- db.run(queueId(queue).result)
-//      next <- db.run(nextInQueue(queueId.head).result)
-//      expire = new Timestamp(new java.util.Date().getTime + 20000)
-//      uuid = java.util.UUID.randomUUID.toString
-//      reqId <- db.run(ModerationRequests
-//        .filter(_.commentId === next.head)
-//        .map(r => (r.expiryTime, r.requestId, r.moderatorId))
-//        .update(expire, uuid, moderatorId))
-//      request <- db.run(ModerationRequests.filter(_.requestId === uuid).result)
-//    } yield Ok(Json.obj(
-//      "data" -> Json.obj(
-//        "moderation" -> request.head,
-//        "reports" -> ""
-//      )
-//    ))
-//  }
-
-
   def next(queue: String) = Action {
 
-    val moderatorId = 1L // FIXME: get moderatorId from request
+    val moderatorId = 437L // FIXME: get moderatorId from request
 
     Ok(Json.obj(
       "data" -> Json.obj(
@@ -91,5 +52,14 @@ class Application @Inject()(ws: WSClient) extends Controller {
   //      // action <-
   //    } yield Ok()
   //  }
+
+  def delete(requestId: String) = Action {
+
+    ModerationRequest.delete(requestId)
+
+    Ok(Json.obj(
+      "status" -> "ok"
+    ))
+  }
 }
 

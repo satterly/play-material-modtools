@@ -8,7 +8,9 @@ angular.module('modtools.services', ['config', 'ngResource'])
     return $resource(config.moderationApiUrl + '/comment', {}, {
       'next':    {method: 'GET', url: config.moderationApiUrl + '/queues/:queue/next'},
       'comment': {method: 'POST', url: config.moderationApiUrl + '/comment/:commentId/status'},
-      'status': {method: 'GET', url: config.moderationApiUrl + '/queues'}
+      'status':  {method: 'GET', url: config.moderationApiUrl + '/queues'},
+      'action':  {method: 'POST', url: config.moderationApiUrl + '/action'},
+      'delete':  {method: 'DELETE', url: config.moderationApiUrl + '/moderation/:id'}
     })
   }])
 
@@ -48,11 +50,10 @@ angular.module('modtools.services', ['config', 'ngResource'])
       'recommended': {method: 'GET', url: config.discussionApiUrl + '/recent/recommended'},
       'get':         {method: 'GET', url: config.discussionApiUrl + '/comment/:id'},
       'context':     {method: 'GET', url: config.discussionApiUrl + '/comment/:id/context'},
-      'approve':     {method: 'POST', params: {status: 'visible'}, url: config.discussionApiUrl + '/comment/:id/status'},
+      'approve':     {method: 'POST', url: config.discussionApiUrl + '/comment/:id/approve'},
       'pick':        {method: 'POST', url: config.discussionApiUrl + '/comment/:id/pick'},
-      'reject':      {method: 'POST', params: {status: 'rejected'}, url: config.discussionApiUrl + '/comment/:id/status'},
-      'block':       {method: 'POST', params: {status: 'blocked'}, url: config.discussionApiUrl + '/comment/:id/status'},
-      'remove':      {method: 'POST', params: {status: 'removed'}, url: config.discussionApiUrl + '/comment/:id/status'}
+      'block':       {method: 'POST', url: config.discussionApiUrl + '/comment/:id/block'},
+      'remove':      {method: 'POST', url: config.discussionApiUrl + '/comment/:id/remove'}
     });
   }])
 

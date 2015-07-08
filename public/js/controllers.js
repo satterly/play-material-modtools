@@ -72,19 +72,45 @@ angular.module('modtools.controllers', ['ngMaterial', 'ngSanitize'])
         controller: function ($scope, $mdBottomSheet) {
           $scope.approve = function () {
             // console.log($scope.comment.id);
-            Moderation.comment({commentId: $scope.comment.id}, {status: 'approve'}, function (response) {
-              // console.log(response);
+            Comment.approve({id: $scope.comment.id}, {}, function (response) {
+              console.log(response);
               // Moderation.action({...})
+              console.log($scope.request.next);
+              Moderation.delete({id: $scope.request.next.requestId}, function(response) {
+                console.log('deleted ' + $scope.request.next.requestId);
+              });
+              next();
             });
           };
           $scope.pick = function () {
-
+            Comment.pick({id: $scope.comment.id}, {}, function (response) {
+              console.log(response);
+              // Moderation.action({...})
+              Moderation.delete({id: $scope.request.next.requestId}, function(response) {
+                console.log('deleted ' + $scope.request.next.requestId);
+              });
+              next();
+            });
           };
           $scope.block = function () {
-
+            Comment.block({id: $scope.comment.id}, {}, function (response) {
+              console.log(response);
+              // Moderation.action({...})
+              Moderation.delete({id: $scope.request.next.requestId}, function(response) {
+                console.log('deleted ' + $scope.request.next.requestId);
+              });
+              next();
+            });
           };
           $scope.remove = function () {
-
+            Comment.remove({id: $scope.comment.id}, {}, function (response) {
+              console.log(response);
+              // Moderation.action({...})
+              Moderation.delete({id: $scope.request.next.requestId}, function(response) {
+                console.log('deleted ' + $scope.request.next.requestId);
+              });
+              next();
+            });
           };
 
 

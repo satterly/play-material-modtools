@@ -3,9 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /queues                     controllers.Application.queues
-GET     /queues/:queue/next         controllers.Application.next(queue: String)
+GET        /                          controllers.Application.index
+GET        /queues                    controllers.Application.queues
+GET        /queues/:queue/next        controllers.Application.next(queue: String)
+DELETE     /moderation/:id            controllers.Application.delete(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET        /*file                     controllers.Assets.versioned(path="/public", file: Asset)
