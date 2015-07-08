@@ -1,6 +1,5 @@
 *.class
 *.log
-
 logs
 project/project
 project/target
