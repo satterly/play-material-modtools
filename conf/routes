@@ -3,6 +3,7 @@
 # ~~~~
 
 # Management
+GET     /                           controllers.Application.index
 GET     /_                          controllers.Management.healthcheck
 
 # Authentication
