@@ -1,4 +1,4 @@
-name := """play-material-modtools"""
+name := """play-modtools"""
 
 version := "1.0-SNAPSHOT"
 
