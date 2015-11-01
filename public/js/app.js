@@ -1,19 +1,19 @@
 'use strict';
 
 angular.module('modtools', [
-  'config',
-  'ngRoute',
-  'ngCookies',
-  'ngMaterial',
-  'modtools.services',
-  'modtools.controllers',
-  'modtools.filters',
-  'modtools.directives'
-])
+    'config',
+    'ngRoute',
+    'ngCookies',
+    'ngMaterial',
+    'modtools.services',
+    'modtools.controllers',
+    'modtools.filters',
+    'modtools.directives'
+  ])
 
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', {templateUrl: 'partials/home.html', controller: 'HomeController'});
-    $routeProvider.when('/queue/:queue', {templateUrl: 'partials/comment.html', controller: 'QueueController'});
+    $routeProvider.when('/queues/:queue', {templateUrl: 'partials/comment.html', controller: 'QueueController'});
     $routeProvider.otherwise({redirectTo: '/'});
   }])
 

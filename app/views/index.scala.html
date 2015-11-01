@@ -10,7 +10,7 @@
 
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("img/favicon.png")">
         <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
-        <link rel="stylesheet" href="@routes.Assets.versioned("vendor/angular-material-0.10.0/angular-material.min.css")"/>
+        <link rel="stylesheet" href="@routes.Assets.versioned("vendor/angular-material-1.0.0-rc1/angular-material.min.css")"/>
         <link rel="stylesheet" href="@routes.Assets.versioned("css/app.css")"/>
     </head>
 
@@ -80,8 +80,8 @@
             <md-content layout-padding>
                 <md-list>
                     <md-subheader>Queues</md-subheader>
-                    <md-list-item ng-repeat="queue in queues" ng-click="goto(queue.code,$event)">
-                        <md-icon md-svg-icon="queue"></md-icon><p>{{ queue.name }} <span class="label label-default" ng-show="queue.available">{{ queue.available }} new<span></span></p>
+                    <md-list-item ng-repeat="q in queues" ng-click="goto(q.code,$event)">
+                        <md-icon md-svg-icon="queue"></md-icon><p>{{ q.queue }} <span class="label label-default" ng-show="queue.available">{{ q.available }} new<span></span></p>
                     </md-list-item>
                     <md-list-item ng-click="goto('all',$event)">
                         <md-icon md-svg-icon="queue"></md-icon><p>All</p>
@@ -112,18 +112,18 @@
 
         <script src="@routes.Assets.versioned("vendor/jquery-2.1.4/jquery.min.js")"></script>
 
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-aria.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-animate.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-cookies.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-loader.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-message-format.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-messages.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-resource.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-route.min.js")"></script>
-        <script src="@routes.Assets.versioned("vendor/angular-1.4.1/angular-sanitize.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-aria.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-animate.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-cookies.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-loader.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-message-format.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-messages.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-resource.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-route.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-1.4.7/angular-sanitize.min.js")"></script>
 
-        <script src="@routes.Assets.versioned("vendor/angular-material-0.10.0/angular-material.min.js")"></script>
+        <script src="@routes.Assets.versioned("vendor/angular-material-1.0.0-rc1/angular-material.min.js")"></script>
 
         <script src="@routes.Assets.versioned("config.js")"></script>  <!-- configuration options -->
 

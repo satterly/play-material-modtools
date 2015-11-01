@@ -2,11 +2,41 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET        /                          controllers.Application.index
-GET        /queues                    controllers.Application.queues
-GET        /queues/:queue/next        controllers.Application.next(queue: String)
-DELETE     /moderation/:id            controllers.Application.delete(id: String)
+# Management
+GET     /_                          controllers.Management.healthcheck
+
+# Authentication
+#GET     /login                      controllers.Authentication.login
+#POST    /login                      controllers.Authentication.loginAction
+#GET     /oauth2callback             controllers.Authentication.oauth2Callback
+#GET     /logout                     controllers.Authentication.logout
+
+# Discussions
+#GET     /discussions                controllers.Discussions.list
+#GET     /discussions/:key           controllers.Discussions.show(key: String)
+
+# Moderation Requests
+GET     /queues                     controllers.ModerationQueues.list
+GET     /queues/:queue/next         controllers.ModerationQueues.next(queue: String)
+
+# Comments
+#PUT     /comments/:id               controllers.Comments.update(id: String)
+
+# Avatars
+#GET     /avatars                    controllers.Avatars.list
+#PUT     /avatars/:id                controllers.Avatars.update(id: String)
+
+# Profiles
+#GET     /profiles                   controllers.Profiles.list
+#GET     /profiles/:id               controllers.Profiles.show(id: String)
+
+# Filters
+#GET     /ipaddress                  controllers.Moderation.throttle
+#GET     /spam                       controllers.Moderation.spam
+
+# Moderators
+#GET     /moderators                 controllers.Moderators.list
+#GET     /moderators/:id             controllers.Moderators.show(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /*file                     controllers.Assets.versioned(path="/public", file: Asset)
+GET     /*file                      controllers.Assets.versioned(path="/public", file: Asset)
